@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Circle } from 'react-konva';
 
-import { BASKETSIZE } from './constants';
+import { BASKETSIZE } from '../constants';
 
 export default class Basket extends Component {
 
@@ -14,9 +14,9 @@ export default class Basket extends Component {
       <Circle
         width={BASKETSIZE}
         height={BASKETSIZE}
-        x={window.innerWidth/2}
-        y={window.innerHeight/2}
-        stroke={5}
+        x={basketPos.x}
+        y={basketPos.y}
+        stroke="black"
       />
     );
   }

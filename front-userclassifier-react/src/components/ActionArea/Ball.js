@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Circle } from 'react-konva';
 
-import { BALLSIZE, BASKETSIZE } from './constants';
+import { BALLSIZE, BASKETSIZE, ACT_ENUM } from '../constants';
 
 export default class Basket extends Component {
 
@@ -9,21 +9,22 @@ export default class Basket extends Component {
 		inBasket: false
 	}
 	
-	checkBasket(param) {
-		const { x, y } = param.target.attrs;
+	checkBasket(e) {
+		const { x, y } = e.target.attrs;
 		const { basketPos } = this.props;
 
 		if(overlaps(x, y, basketPos)){			
 			this.setState({
 				inBasket: true
 			})
+			this.props.setActionState(ACT_ENUM.ROUND_END);
 		}
 	}
 	
   render() {
 		
 		const { inBasket } = this.state;
-
+		
 		if(!inBasket) {
 			return (
 				// TODO: Change hard coded starting pos
@@ -34,7 +35,9 @@ export default class Basket extends Component {
 					height={BALLSIZE}
 					fill="green"
 					draggable
-					onDragEnd={this.checkBasket.bind(this)}
+					onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.checkBasket(e) }}
+					onDragStart={(e) => { this.props.setActionState(ACT_ENUM.PLAY); this.props.mouseActivityHandler(e) }}
+					onDragMove={this.props.mouseActivityHandler}
 				/>
 			);
 		}
