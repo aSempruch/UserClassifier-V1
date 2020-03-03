@@ -12,6 +12,11 @@ export default class ActionAreaContainer extends Component {
 		x: window.innerWidth/2,
 		y: window.innerHeight/2
 	}
+
+	ballPos = {
+		x: window.innerWidth/2-200,
+		y: window.innerHeight/2
+	}
 	
 	rawMouseData = {
 		x: [],
@@ -45,7 +50,7 @@ export default class ActionAreaContainer extends Component {
 	}
 
 	computeMouseData() {
-		processRawMouseData(this.rawMouseData);
+		processRawMouseData(this.rawMouseData, this.basketPos, this.ballPos);
 	}
 
 	render() {
@@ -63,11 +68,12 @@ export default class ActionAreaContainer extends Component {
 						basketPos={this.basketPos}
 					/>
 					<Ball
+						ballPos={this.ballPos}
 						basketPos={this.basketPos}
 						mouseActivityHandler={mouseActivityHandler}
 						setActionState={this.props.setActionState}
-					/>
-				</Layer>
+						/>
+					</Layer>
 			</Stage>
 		)
 	}

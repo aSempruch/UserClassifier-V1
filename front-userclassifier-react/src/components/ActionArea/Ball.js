@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Circle } from 'react-konva';
+import { Group, Circle, Text } from 'react-konva';
 
 import { BALLSIZE, BASKETSIZE, ACT_ENUM } from '../constants';
 
@@ -24,21 +24,34 @@ export default class Basket extends Component {
   render() {
 		
 		const { inBasket } = this.state;
+		const { ballPos } = this.props;
 		
 		if(!inBasket) {
 			return (
 				// TODO: Change hard coded starting pos
-				<Circle
-					x = {window.innerWidth/2-200}
-					y = {window.innerHeight/2}
-					width={BALLSIZE}
-					height={BALLSIZE}
-					fill="green"
+				<Group
+					x = {ballPos.x}
+					y = {ballPos.y}
 					draggable
 					onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.checkBasket(e) }}
 					onDragStart={(e) => { this.props.setActionState(ACT_ENUM.PLAY); this.props.mouseActivityHandler(e) }}
 					onDragMove={this.props.mouseActivityHandler}
-				/>
+				>
+					<Circle
+						width={BALLSIZE}
+						height={BALLSIZE}
+						fill="green"
+						shadowEnabled
+						shadowBlur={3}
+						shadowOffset={{x: 2, y: 2}}
+					/>
+					<Text
+						text="1"
+						fill="white"
+						fontSize={20}
+						offset={{x: 7, y: 9}}
+					/>
+				</Group>
 			);
 		}
 		else {
