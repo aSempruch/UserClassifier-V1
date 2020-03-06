@@ -14,8 +14,8 @@ export default class ActionAreaContainer extends Component {
 	}
 
 	ballPos = {
-		x: window.innerWidth/2-200,
-		y: window.innerHeight/2
+		x: window.innerWidth/2+200,
+		y: window.innerHeight/2-140
 	}
 	
 	rawMouseData = {
@@ -45,6 +45,8 @@ export default class ActionAreaContainer extends Component {
 	}
 
 	componentDidUpdate(props) {
+
+		// Data collection finished
 		if(this.props.actionState === ACT_ENUM.ROUND_END && 
 				props.actionState === ACT_ENUM.PLAY) { this.computeMouseData(); }
 	}
@@ -55,6 +57,7 @@ export default class ActionAreaContainer extends Component {
 
 	render() {
 
+		// Only log data if proper action state
 		const mouseActivityHandler = (e) => shouldLog(this.props.actionState) && this.logMouse(e, this.rawMouseData);
 
 		return (

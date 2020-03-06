@@ -1,12 +1,18 @@
-import { find_angle, find_distance } from './helpers';
+import { find_angle, find_distance, radsToDegrees } from './helpers';
 
 export const processRawMouseData = (rawData, basketPos, ballPos) => {
 
-	const { x, y, dragstart, dragend } = rawData;
-	console.log(rawData);
+	const { x, y } = rawData;
+	const length = x.length;
+	// console.log(rawData);
 
 	var divs = [];
 	var dists = [];
+
+	var divSum = 0;
+	var distSum = 0;
+
+	var ballAngle = radsToDegrees(find_angle(ballPos, basketPos, {x: basketPos.x, y: basketPos.y-1}) + ((ballPos.x < basketPos.x) ? Math.PI : 0));	
 
 	for(var i = 0; i < x.length; i++) {
 
@@ -14,15 +20,19 @@ export const processRawMouseData = (rawData, basketPos, ballPos) => {
 
 		const angle = find_angle(ballPos, basketPos, mousePos);
 
-		const divergence = Math.round(Math.sin(angle) * find_distance(mousePos, basketPos));
-		divs.push(divergence);
+		const divergence = Math.round(Math.sin(angle) * find_distance(mousePos, basketPos) * 5);
+		divSum += divergence;
 
 		const distance = Math.round(Math.cos(angle) * find_distance(mousePos, basketPos)); 
-		dists.push(distance);
-
-		// console.log("Divergence: " + divergence + "\tDistance left: " + distance + "\tAngle: " + Math.round((180*angle)/Math.PI));
+		distSum += distance;
 	}
 
-	console.log({x: divs, y: dists});
+	const procData = {
+		ballAngle: ballAngle, // 	Angle between ball and target {0, 360}
+		avgDist: Math.round(distSum / length), // Average distance between ball and target
+		avgDiv: Math.round(divSum / length), // Average divergence from optimal path as ball is dragged to target
+	}
+
+	console.log(procData);
 	
 }
