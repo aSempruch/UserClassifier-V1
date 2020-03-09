@@ -4,7 +4,7 @@ export const processRawMouseData = (rawData, basketPos, ballPos) => {
 
 	const { x, y } = rawData;
 	const length = x.length;
-	// console.log(rawData);
+	console.log(rawData);
 
 	var divs = [];
 	var dists = [];
@@ -27,11 +27,12 @@ export const processRawMouseData = (rawData, basketPos, ballPos) => {
 		distSum += distance;
 	}
 
-	const procData = {
+	const procData = [{
 		ballAngle: ballAngle, // 	Angle between ball and target {0, 360}
 		avgDist: Math.round(distSum / length), // Average distance between ball and target
 		avgDiv: Math.round(divSum / length), // Average divergence from optimal path as ball is dragged to target
-	}
+		timeInterval: rawData.timeIntervals[0]
+	}];
 
 	console.log(procData);
 	

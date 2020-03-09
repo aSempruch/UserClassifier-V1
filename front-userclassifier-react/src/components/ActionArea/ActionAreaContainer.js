@@ -3,7 +3,7 @@ import { Stage, Layer } from 'react-konva';
 import Basket from './Basket';
 import Ball from './Ball';
 
-import { ACT_ENUM } from '../constants';
+import { ACT_ENUM, BALL_ENUM } from '../constants';
 import { processRawMouseData } from '../utils';
 
 export default class ActionAreaContainer extends Component {
@@ -22,8 +22,11 @@ export default class ActionAreaContainer extends Component {
 		x: [],
 		y: [],
 		dragstart: [],
-		dragend: []
+		dragend: [],
+		timeIntervals: []
 	}
+
+	timer = null;
 
 	logMouse(e, rawMouseData) {
 		switch(e.type) {
@@ -51,6 +54,20 @@ export default class ActionAreaContainer extends Component {
 				props.actionState === ACT_ENUM.PLAY) { this.computeMouseData(); }
 	}
 
+	handleBallEvent(e) {
+		switch(e) {
+
+			case BALL_ENUM.INITIAL_PICKED_UP:
+				if(this.props.actionState === ACT_ENUM.WAIT) { this.props.setActionState(ACT_ENUM.PLAY); }
+				this.timer = new Date();
+				break;
+
+			case BALL_ENUM.PLACED_IN_BASKET:
+				this.rawMouseData.timeIntervals.push(new Date() - this.timer);
+				break;
+		}		
+	}
+
 	computeMouseData() {
 		processRawMouseData(this.rawMouseData, this.basketPos, this.ballPos);
 	}
@@ -75,6 +92,7 @@ export default class ActionAreaContainer extends Component {
 						basketPos={this.basketPos}
 						mouseActivityHandler={mouseActivityHandler}
 						setActionState={this.props.setActionState}
+						handleBallEvent={this.handleBallEvent.bind(this)}
 						/>
 					</Layer>
 			</Stage>

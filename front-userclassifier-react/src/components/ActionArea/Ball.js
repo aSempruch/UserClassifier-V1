@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { Group, Circle, Text } from 'react-konva';
 
-import { BALLSIZE, BASKETSIZE, ACT_ENUM } from '../constants';
+import { BALLSIZE, BASKETSIZE, ACT_ENUM, BALL_ENUM } from '../constants';
 
 export default class Basket extends Component {
 
 	state = {
-		inBasket: false
+		inBasket: false,
+		touched: false
 	}
 	
 	checkBasket(e) {
@@ -17,8 +18,15 @@ export default class Basket extends Component {
 			this.setState({
 				inBasket: true
 			})
+			this.props.handleBallEvent(BALL_ENUM.PLACED_IN_BASKET);
 			this.props.setActionState(ACT_ENUM.ROUND_END);
 		}
+	}
+
+	dragStart(e) {
+		this.props.handleBallEvent((this.state.touched) ? (BALL_ENUM.PICKED_UP) : (BALL_ENUM.INITIAL_PICKED_UP));
+		this.props.mouseActivityHandler(e);
+		this.setState({touched: true});
 	}
 	
   render() {
@@ -33,8 +41,8 @@ export default class Basket extends Component {
 					x = {ballPos.x}
 					y = {ballPos.y}
 					draggable
-					onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.checkBasket(e) }}
-					onDragStart={(e) => { this.props.setActionState(ACT_ENUM.PLAY); this.props.mouseActivityHandler(e) }}
+					onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.props.handleBallEvent(BALL_ENUM.PUT_DOWN); this.checkBasket(e) }}
+					onDragStart={this.dragStart.bind(this)}
 					onDragMove={this.props.mouseActivityHandler}
 				>
 					<Circle
