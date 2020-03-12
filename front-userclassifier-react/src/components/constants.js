@@ -1,3 +1,7 @@
+// TODO: Revise this hacky sizing
+export const ACTION_AREA_HEIGHT = window.innerHeight;
+export const ACTION_AREA_WIDTH = window.innerWidth;
+
 export const ACT_ENUM = Object.freeze({
 	WAIT: 2,
 	PLAY: 3,
@@ -14,3 +18,7 @@ export const BALL_ENUM = Object.freeze({
 // Action Area
 export const BASKETSIZE = 120;
 export const BALLSIZE = 50;
+export const BALL_SPACING = 50;
+
+
+export const BALL_COUNT = 10;

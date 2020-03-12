@@ -3,8 +3,8 @@ import { Stage, Layer } from 'react-konva';
 import Basket from './Basket';
 import Ball from './Ball';
 
-import { ACT_ENUM, BALL_ENUM } from '../constants';
-import { processRawMouseData } from '../utils';
+import { ACT_ENUM, BALL_ENUM, BALL_COUNT } from '../constants';
+import { processRawMouseData, generateBalls } from '../utils';
 
 export default class ActionAreaContainer extends Component {
 
@@ -72,7 +72,10 @@ export default class ActionAreaContainer extends Component {
 		processRawMouseData(this.rawMouseData, this.basketPos, this.ballPos);
 	}
 
+	generateBalls
+
 	render() {
+		
 
 		// Only log data if proper action state
 		const mouseActivityHandler = (e) => shouldLog(this.props.actionState) && this.logMouse(e, this.rawMouseData);
@@ -87,13 +90,7 @@ export default class ActionAreaContainer extends Component {
 					<Basket 
 						basketPos={this.basketPos}
 					/>
-					<Ball
-						ballPos={this.ballPos}
-						basketPos={this.basketPos}
-						mouseActivityHandler={mouseActivityHandler}
-						setActionState={this.props.setActionState}
-						handleBallEvent={this.handleBallEvent.bind(this)}
-						/>
+					{generateBalls(this.basketPos)}
 					</Layer>
 			</Stage>
 		)

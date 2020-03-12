@@ -32,7 +32,7 @@ export default class Basket extends Component {
   render() {
 		
 		const { inBasket } = this.state;
-		const { ballPos } = this.props;
+		const { ballPos, num } = this.props;
 		
 		if(!inBasket) {
 			return (
@@ -52,12 +52,6 @@ export default class Basket extends Component {
 						shadowEnabled
 						shadowBlur={3}
 						shadowOffset={{x: 2, y: 2}}
-					/>
-					<Text
-						text="1"
-						fill="white"
-						fontSize={20}
-						offset={{x: 7, y: 9}}
 					/>
 				</Group>
 			);
