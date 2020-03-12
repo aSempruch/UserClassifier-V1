@@ -3,21 +3,15 @@ import { Stage, Layer } from 'react-konva';
 import Basket from './Basket';
 import Ball from './Ball';
 
-import { ACT_ENUM, BALL_ENUM, BALL_COUNT } from '../constants';
+import { ACT_ENUM, BALL_ENUM, BASKET_POS, BALL_COUNT } from '../constants';
 import { processRawMouseData, generateBalls } from '../utils';
 
 export default class ActionAreaContainer extends Component {
 
-	basketPos = {
-		x: window.innerWidth/2,
-		y: window.innerHeight/2
+	state = {
+		balls: []
 	}
 
-	ballPos = {
-		x: window.innerWidth/2+200,
-		y: window.innerHeight/2-140
-	}
-	
 	rawMouseData = {
 		x: [],
 		y: [],
@@ -28,6 +22,29 @@ export default class ActionAreaContainer extends Component {
 
 	timer = null;
 
+	componentDidMount() {
+
+		const ballProps = {
+			handleBallEvent: this.handleBallEvent.bind(this),
+			mouseActivityHandler: this.mouseActivityHandler.bind(this),
+			setActionState: this.props.setActionState
+		}
+
+		this.setState({
+			balls: generateBalls().map(b => (
+			React.cloneElement(
+				b, ballProps
+			)
+		))});
+	}
+	
+	componentDidUpdate(props) {
+
+		// Data collection finished
+		if(this.props.actionState === ACT_ENUM.ROUND_END && 
+				props.actionState === ACT_ENUM.PLAY) { this.computeMouseData(); }
+	}
+	
 	logMouse(e, rawMouseData) {
 		switch(e.type) {
 			case "mousemove":
@@ -44,15 +61,13 @@ export default class ActionAreaContainer extends Component {
 			default:
 				console.error("ActionAreaContainer.js: Unexpected mouse event \"" + e.type + "\" on track");
 		}
-		// console.log(e.type);
 	}
 
-	componentDidUpdate(props) {
-
-		// Data collection finished
-		if(this.props.actionState === ACT_ENUM.ROUND_END && 
-				props.actionState === ACT_ENUM.PLAY) { this.computeMouseData(); }
+	mouseActivityHandler(e) {
+		// Only log data if proper action state
+		shouldLog(this.props.actionState) && this.logMouse(e, this.rawMouseData)
 	}
+
 
 	handleBallEvent(e) {
 		switch(e) {
@@ -69,28 +84,19 @@ export default class ActionAreaContainer extends Component {
 	}
 
 	computeMouseData() {
-		processRawMouseData(this.rawMouseData, this.basketPos, this.ballPos);
+		processRawMouseData(this.rawMouseData, this.ballPos);
 	}
 
-	generateBalls
-
 	render() {
-		
-
-		// Only log data if proper action state
-		const mouseActivityHandler = (e) => shouldLog(this.props.actionState) && this.logMouse(e, this.rawMouseData);
-
 		return (
 			<Stage 
 				width={window.innerWidth}
 				height={window.innerHeight}
-				onMouseMove={mouseActivityHandler}
+				onMouseMove={this.mouseActivityHandler.bind(this)}
 			>
 				<Layer>
-					<Basket 
-						basketPos={this.basketPos}
-					/>
-					{generateBalls(this.basketPos)}
+					<Basket/>
+					{this.state.balls}
 					</Layer>
 			</Stage>
 		)

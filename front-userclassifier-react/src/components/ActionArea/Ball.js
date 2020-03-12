@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Group, Circle, Text } from 'react-konva';
 
-import { BALLSIZE, BASKETSIZE, ACT_ENUM, BALL_ENUM } from '../constants';
+import { BALLSIZE, BASKETSIZE, BASKET_POS, ACT_ENUM, BALL_ENUM } from '../constants';
 
 export default class Basket extends Component {
 
@@ -12,9 +12,8 @@ export default class Basket extends Component {
 	
 	checkBasket(e) {
 		const { x, y } = e.target.attrs;
-		const { basketPos } = this.props;
 
-		if(overlaps(x, y, basketPos)){			
+		if(overlaps(x, y)){			
 			this.setState({
 				inBasket: true
 			})
@@ -34,37 +33,33 @@ export default class Basket extends Component {
 		const { inBasket } = this.state;
 		const { ballPos, num } = this.props;
 		
-		if(!inBasket) {
-			return (
-				// TODO: Change hard coded starting pos
-				<Group
-					x = {ballPos.x}
-					y = {ballPos.y}
-					draggable
-					onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.props.handleBallEvent(BALL_ENUM.PUT_DOWN); this.checkBasket(e) }}
-					onDragStart={this.dragStart.bind(this)}
-					onDragMove={this.props.mouseActivityHandler}
-				>
-					<Circle
-						width={BALLSIZE}
-						height={BALLSIZE}
-						fill="green"
-						shadowEnabled
-						shadowBlur={3}
-						shadowOffset={{x: 2, y: 2}}
-					/>
-				</Group>
-			);
-		}
-		else {
-			return null;
-		}
+		return (
+			// TODO: Change hard coded starting pos
+			<Group
+				x = {ballPos.x}
+				y = {ballPos.y}
+				draggable={true}
+				onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.props.handleBallEvent(BALL_ENUM.PUT_DOWN); this.checkBasket(e) }}
+				onDragStart={this.dragStart.bind(this)}
+				onDragMove={this.props.mouseActivityHandler}
+				visible={!inBasket}
+			>
+				<Circle
+					width={BALLSIZE}
+					height={BALLSIZE}
+					fill="green"
+					shadowEnabled
+					shadowBlur={3}
+					shadowOffset={{x: 2, y: 2}}
+				/>
+			</Group>
+		);
 	}
 }
 
-const overlaps = (x, y, bp) => {
+const overlaps = (x, y) => {
 	return (
-		(Math.abs(bp.x-x) < BASKETSIZE/2 - BALLSIZE/2 + 1) && // 1 added for extra tolerance
-		(Math.abs(bp.y-y) < BASKETSIZE/2 - BALLSIZE/2 + 1)
+		(Math.abs(BASKET_POS.x-x) < BASKETSIZE/2 - BALLSIZE/2 + 1) && // 1 added for extra tolerance
+		(Math.abs(BASKET_POS.y-y) < BASKETSIZE/2 - BALLSIZE/2 + 1)
 	);
 }

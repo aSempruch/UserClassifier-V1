@@ -16,7 +16,12 @@ export const BALL_ENUM = Object.freeze({
 })
 
 // Action Area
+export const BASKET_POS = {
+	x: window.innerWidth/2,
+	y: window.innerHeight/2
+};
 export const BASKETSIZE = 120;
+
 export const BALLSIZE = 50;
 export const BALL_SPACING = 50;
 

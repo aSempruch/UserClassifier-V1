@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import { find_angle, find_distance, radsToDegrees, generateBallPos, isValidBallPos } from './helpers';
 import Ball from './ActionArea/Ball';
-import { BALL_COUNT } from './constants';
+import { BALL_COUNT, BASKET_POS } from './constants';
 
-export const processRawMouseData = (rawData, basketPos, ballPos) => {
+export const processRawMouseData = (rawData, ballPos) => {
 
 	const { x, y } = rawData;
 	const length = x.length;
@@ -15,19 +15,19 @@ export const processRawMouseData = (rawData, basketPos, ballPos) => {
 	var divSum = 0;
 	var distSum = 0;
 
-	var ballAngle = radsToDegrees(find_angle(ballPos, basketPos, {x: basketPos.x, y: basketPos.y-1}) + ((ballPos.x < basketPos.x) ? Math.PI : 0));
-	var gapDistance = find_distance(ballPos, basketPos);	
+	var ballAngle = radsToDegrees(find_angle(ballPos, BASKET_POS, {x: BASKET_POS.x, y: BASKET_POS.y-1}) + ((ballPos.x < BASKET_POS.x) ? Math.PI : 0));
+	var gapDistance = find_distance(ballPos, BASKET_POS);	
 
 	for(var i = 0; i < x.length; i++) {
 
 		const mousePos = {x: x[i], y: y[i]};
 
-		const angle = find_angle(ballPos, basketPos, mousePos);
+		const angle = find_angle(ballPos, BASKET_POS, mousePos);
 
-		const divergence = Math.round(Math.sin(angle) * find_distance(mousePos, basketPos) * 5);
+		const divergence = Math.round(Math.sin(angle) * find_distance(mousePos, BASKET_POS) * 5);
 		divSum += divergence;
 
-		const distance = Math.round(Math.cos(angle) * find_distance(mousePos, basketPos)); 
+		const distance = Math.round(Math.cos(angle) * find_distance(mousePos, BASKET_POS)); 
 		distSum += distance;
 	}
 
@@ -43,14 +43,13 @@ export const processRawMouseData = (rawData, basketPos, ballPos) => {
 	
 }
 
-export const generateBalls = (basketPos) => {
+export const generateBalls = () => {
 	var result = [], usedPos = [];
 	for(let i = 0; i < BALL_COUNT; i++) {
 		
 		let pos, guard = 0;
 		do {
 			pos = generateBallPos();
-			// console.log('generated Pos: ' + pos.x + ':' + pos.y + " isValid: " + isValidBallPos(pos, usedPos, basketPos))
 			guard++;
 
 			if(guard > 50) {
@@ -58,7 +57,7 @@ export const generateBalls = (basketPos) => {
 				break;
 			}
 
-		} while(!isValidBallPos(pos, usedPos, basketPos));	
+		} while(!isValidBallPos(pos, usedPos));	
 		
 		usedPos.push(pos);
 

@@ -1,4 +1,4 @@
-import { BALL_SPACING, BALLSIZE, ACTION_AREA_HEIGHT, ACTION_AREA_WIDTH } from './constants';
+import { BALL_SPACING, BALLSIZE, BASKET_POS, ACTION_AREA_HEIGHT, ACTION_AREA_WIDTH } from './constants';
 
 export const find_distance = (A, B) => {
 	return Math.sqrt(Math.pow(B.x-A.x,2) + Math.pow(B.y-A.y,2));
@@ -20,9 +20,7 @@ export const generateBallPos = () => {
 	const totalSpacing = BALLSIZE + BALL_SPACING;
 
 	const generator = (max) => {
-		return Math.floor(
-			Math.random() * (max - totalSpacing*2) + totalSpacing 
-		)
+		return Math.floor( Math.random() * (max - totalSpacing*2) + totalSpacing )
 	}
 
 	return {
@@ -31,13 +29,13 @@ export const generateBallPos = () => {
 	};
 }
 
-export const isValidBallPos = (pos, usedPos, basketPos) => {
+export const isValidBallPos = (pos, usedPos) => {
 	
 	let totalSpacing = BALLSIZE + BALL_SPACING;
 	
 	const isValid = (a, b) => (Math.abs(a - b) > totalSpacing);
 
-	if(!isValid(pos.x, basketPos.x) && !isValid(pos.y, basketPos.y)) { return false }; // Is not too close to basket
+	if(!isValid(pos.x, BASKET_POS.x) && !isValid(pos.y, BASKET_POS.y)) { return false }; // Is not too close to basket
 	
 	for (const p of usedPos) {
 		if(!isValid(pos.x, p.x) && !isValid(pos.y, p.y)) { return false; } // Is not too close to existing ball
