@@ -32,10 +32,9 @@ export default class ActionAreaContainer extends Component {
 
 		this.setState({
 			balls: generateBalls().map(b => (
-			React.cloneElement(
-				b, ballProps
-			)
-		))});
+				React.cloneElement(b, ballProps)
+			))
+		});
 	}
 	
 	componentDidUpdate(props) {

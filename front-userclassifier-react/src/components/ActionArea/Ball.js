@@ -18,7 +18,7 @@ export default class Basket extends Component {
 				inBasket: true
 			})
 			this.props.handleBallEvent(BALL_ENUM.PLACED_IN_BASKET);
-			this.props.setActionState(ACT_ENUM.ROUND_END);
+			// this.props.setActionState(ACT_ENUM.ROUND_END);
 		}
 	}
 
@@ -59,7 +59,7 @@ export default class Basket extends Component {
 
 const overlaps = (x, y) => {
 	return (
-		(Math.abs(BASKET_POS.x-x) < BASKETSIZE/2 - BALLSIZE/2 + 1) && // 1 added for extra tolerance
-		(Math.abs(BASKET_POS.y-y) < BASKETSIZE/2 - BALLSIZE/2 + 1)
+		(Math.abs(BASKET_POS.x-x) < BASKETSIZE/2 - BALLSIZE/2 + 3) && // 3 added for extra tolerance
+		(Math.abs(BASKET_POS.y-y) < BASKETSIZE/2 - BALLSIZE/2 + 3)
 	);
 }
