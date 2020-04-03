@@ -43,3 +43,11 @@ export const isValidBallPos = (pos, usedPos) => {
 
 	return true;
 }
+
+export const extractBallsPos = (balls) => {
+	var ballsPos = [];
+	balls.forEach(b => {
+		ballsPos.push(b.props.ballPos);
+	})
+	return ballsPos;
+}

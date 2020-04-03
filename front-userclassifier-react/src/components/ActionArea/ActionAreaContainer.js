@@ -21,6 +21,7 @@ export default class ActionAreaContainer extends Component {
 	}
 
 	timer = null;
+	ballsInBasket = 0;
 
 	componentDidMount() {
 
@@ -39,7 +40,7 @@ export default class ActionAreaContainer extends Component {
 	
 	componentDidUpdate(props) {
 
-		// Data collection finished
+		// Data collection finished - Compute Data
 		if(this.props.actionState === ACT_ENUM.ROUND_END && 
 				props.actionState === ACT_ENUM.PLAY) { this.computeMouseData(); }
 	}
@@ -62,14 +63,14 @@ export default class ActionAreaContainer extends Component {
 		}
 	}
 
-	mouseActivityHandler(e) {
-		// Only log data if proper action state
+	mouseActivityHandler(e) {		
+		// Only log data if proper action state		
 		shouldLog(this.props.actionState) && this.logMouse(e, this.rawMouseData)
 	}
 
 
-	handleBallEvent(e) {
-		switch(e) {
+	handleBallEvent(e, ballNum) {
+			switch(e) {
 
 			case BALL_ENUM.INITIAL_PICKED_UP:
 				if(this.props.actionState === ACT_ENUM.WAIT) { this.props.setActionState(ACT_ENUM.PLAY); }
@@ -78,12 +79,20 @@ export default class ActionAreaContainer extends Component {
 
 			case BALL_ENUM.PLACED_IN_BASKET:
 				this.rawMouseData.timeIntervals.push(new Date() - this.timer);
+				this.ballsInBasket++;
+				if(this.ballsInBasket == BALL_COUNT) {
+					this.endRound();
+				}
 				break;
 		}		
 	}
 
+	endRound() {
+		this.props.setActionState(ACT_ENUM.ROUND_END);
+	}
+
 	computeMouseData() {
-		processRawMouseData(this.rawMouseData, this.ballPos);
+		processRawMouseData(this.rawMouseData, this.state.balls);
 	}
 
 	render() {

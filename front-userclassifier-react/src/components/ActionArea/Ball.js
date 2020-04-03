@@ -17,14 +17,14 @@ export default class Basket extends Component {
 			this.setState({
 				inBasket: true
 			})
-			this.props.handleBallEvent(BALL_ENUM.PLACED_IN_BASKET);
-			// this.props.setActionState(ACT_ENUM.ROUND_END);
+			this.props.handleBallEvent(BALL_ENUM.PLACED_IN_BASKET, this.props.num);
 		}
 	}
 
 	dragStart(e) {
-		this.props.handleBallEvent((this.state.touched) ? (BALL_ENUM.PICKED_UP) : (BALL_ENUM.INITIAL_PICKED_UP));
+		this.props.handleBallEvent((this.state.touched) ? (BALL_ENUM.PICKED_UP) : (BALL_ENUM.INITIAL_PICKED_UP), this.props.num);
 		this.props.mouseActivityHandler(e);
+		
 		this.setState({touched: true});
 	}
 	
@@ -39,7 +39,11 @@ export default class Basket extends Component {
 				x = {ballPos.x}
 				y = {ballPos.y}
 				draggable={true}
-				onDragEnd={(e) => { this.props.mouseActivityHandler(e); this.props.handleBallEvent(BALL_ENUM.PUT_DOWN); this.checkBasket(e) }}
+				onDragEnd={(e) => { 
+					this.props.mouseActivityHandler(e);
+					this.props.handleBallEvent(BALL_ENUM.PUT_DOWN, num);
+					this.checkBasket(e) 
+				}}
 				onDragStart={this.dragStart.bind(this)}
 				onDragMove={this.props.mouseActivityHandler}
 				visible={!inBasket}

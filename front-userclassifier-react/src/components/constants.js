@@ -2,6 +2,13 @@
 export const ACTION_AREA_HEIGHT = window.innerHeight;
 export const ACTION_AREA_WIDTH = window.innerWidth;
 
+export const BASKETSIZE = 120;
+
+export const BALLSIZE = 50;
+export const BALL_SPACING = 50;
+
+export const BALL_COUNT = 2;
+
 export const ACT_ENUM = Object.freeze({
 	WAIT: 2,
 	PLAY: 3,
@@ -20,10 +27,3 @@ export const BASKET_POS = {
 	x: window.innerWidth/2,
 	y: window.innerHeight/2
 };
-export const BASKETSIZE = 120;
-
-export const BALLSIZE = 50;
-export const BALL_SPACING = 50;
-
-
-export const BALL_COUNT = 10;

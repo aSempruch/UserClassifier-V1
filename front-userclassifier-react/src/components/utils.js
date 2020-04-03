@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { find_angle, find_distance, radsToDegrees, generateBallPos, isValidBallPos } from './helpers';
+import { find_angle, find_distance, radsToDegrees, generateBallPos, isValidBallPos, extractBallsPos } from './helpers';
 import Ball from './ActionArea/Ball';
 import { BALL_COUNT, BASKET_POS } from './constants';
 
-export const processRawMouseData = (rawData, ballPos) => {
+export const processRawMouseData = (rawData, balls) => {
+
+	var ballsPos = extractBallsPos(balls);
+	console.log(ballsPos);
+	
 
 	const { x, y } = rawData;
 	const length = x.length;
@@ -14,6 +18,8 @@ export const processRawMouseData = (rawData, ballPos) => {
 
 	var divSum = 0;
 	var distSum = 0;
+
+	let ballPos = {x: 0, y: 0}
 
 	var ballAngle = radsToDegrees(find_angle(ballPos, BASKET_POS, {x: BASKET_POS.x, y: BASKET_POS.y-1}) + ((ballPos.x < BASKET_POS.x) ? Math.PI : 0));
 	var gapDistance = find_distance(ballPos, BASKET_POS);	
@@ -64,6 +70,7 @@ export const generateBalls = () => {
 		result.push(
 			<Ball
 				key={i}
+				num={i}
 				ballPos={pos}
 			/>
 		);
